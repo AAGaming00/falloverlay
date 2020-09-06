@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<head>
+<title>WebSocket Test</title>
+</head>
+<body>
+<script language="javascript" type="text/javascript">
+
+    var wsUri = "ws://localhost:13254/";
+    var output;
+
+    function init()
+    {
+    output = document.getElementById("output");
+    testWebSocket();
+    }
+
+    function testWebSocket()
+    {
+    websocket = new WebSocket(wsUri);
+    websocket.onopen = function(evt) { onOpen(evt) };
+    websocket.onclose = function(evt) { onClose(evt) };
+    websocket.onmessage = function(evt) { onMessage(evt) };
+    websocket.onerror = function(evt) { onError(evt) };
+    }
+
+    function onOpen(evt)
+    {
+    //writeToScreen("CONNECTED");
+    }
+
+    function onClose(evt)
+    {
+    //writeToScreen("DISCONNECTED");
+    }
+
+    function onMessage(evt)
+    {
+    writeToEnd(evt.data)
+    }
+
+    function onError(evt)
+    {
+    writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+    }
+
+    function doSend(message)
+    {
+    writeToScreen("SENT: " + message);
+    websocket.send(message);
+    }
+
+    function writeToScreen(message)
+    {
+    var pre = document.createElement("p");
+    pre.style.wordWrap = "break-word";
+    pre.innerHTML = message;
+    output.appendChild(pre);
+    }
+    function writeToEnd(message)
+    {
+    var pre = document.createElement("div");
+    pre.innerHTML = message;
+    pre.id = "endText"
+    var panel = document.createElement("div");
+    panel.id = "endPanel"
+    panel.append(pre)
+    var bg = document.createElement("img");
+    bg.id = "endBg"
+    bg.src = "http://plsno.cf/G72wVB"
+    panel.append(bg)
+    document.getElementById("notifs").append(panel);
+    setTimeout(function(panel){ panel.classList.add('showing') }, 100, panel);
+    setTimeout(function(panel){ panel.classList.remove('showing');     setTimeout(function(panel){ panel.parentNode.removeChild(panel) }, 3000, panel); }, 5000, panel);
+    }
+
+    window.addEventListener("load", init, false);
+
+</script>
+
+<div id="output"></div>
+
+<div id="notifs">
+</div>
+
+
+<style>
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+    body {
+        overflow: hidden;
+        background-color: transparent;
+    }
+    #notifs {
+        display: inline-block;
+        right: 0px;
+        text-align: right;
+        position: absolute;
+    }
+    #endPanel {
+        position: relative;
+        right: -500%;
+        text-align: right;
+        width: auto;
+        opacity: 0;
+        transition: all 3s;
+        padding: 10px;
+        will-change: opacity right;
+        
+    }
+    #endBg {
+        width: 105%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: -5%;
+        z-index: 0;
+    }
+    #endText {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        top: 0px;
+        right: 0px;
+        background-color: transparent;
+        z-index: 1;
+        overflow: hidden;
+        white-space: pre-line;
+    }
+    .showing {
+        right: 0px !important;
+        opacity: 1 !important;
+    }
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
+</style>
+
+
+</body>
